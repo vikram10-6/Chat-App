@@ -40,6 +40,7 @@ export const getMessages = async (req, resp) => {
     const conversation = await Conversation.findOne({
       participants: { $all: [senderId, userToChatId] },
     }).populate("messages");
+    resp.status(200).json(conversation.messages)
     
   } catch (error) {
     console.log("gM error", error.message);
