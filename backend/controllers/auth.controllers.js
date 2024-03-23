@@ -6,10 +6,10 @@ export const signup = async (req, resp) => {
   // resp.send("user")
   try {
     
-    const { fullName, username, password, confirmedPassword, gender } =
+    const { fullName, username, password, confirmPassword, gender } =
       req.body;
 
-    if (password !== confirmedPassword) {
+    if (password !== confirmPassword) {
       return resp.status(400).json({ error: "Password dont match" });
     }
 
