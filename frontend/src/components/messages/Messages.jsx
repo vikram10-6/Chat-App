@@ -1,16 +1,24 @@
+import { useEffect, useRef } from "react";
 import useGetMessages from "../../hooks/useGetMessages";
 import MessageSkeleton from "../skeletons/MessageSkeleton";
 import Message from "./Message";
 
 const Messages = () => {
   const { messages, loading } = useGetMessages();
-  // console.log(messages)
+  const lastMessageRef = useRef()
+
+  useEffect(()=>{
+    setTimeout(()=>{
+      lastMessageRef.current?.scrollIntoView({behavior:"smooth"})
+    },100)//We use setTimeout because sometime ue to rendering timing this effect alone won't work
+  },[messages])
   return (
     <div className="px-4 flex-1 overflow-auto scrollbar-hide">
       {!loading &&
         messages.length > 0 &&
         messages.map((messages) => (
-          <Message key={messages._id} message={messages} />
+          <div className="" key={messages._id}
+          ref = {lastMessageRef} ><Message  message={messages} /></div>
         ))}
       {loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
       {!loading && messages.length === 0 && (
