@@ -4,20 +4,29 @@ import express from "express";
 
 const app = express();
 
-const server = http.createServer(app)
-const io = new Server(server,
-    {cors:{
-        original:["http://localhost:3000"],
-        methods:["GET","POST"]
-    }})
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    original: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+  },
+});
 
-io.on('connection',(socket)=>{
-    console.log("A user connected",socket.id)
+const userSocketMap = {};
 
-    socket.on("disconnect",()=>{
-        console.log("User disconnected",socket.id)
-    })
-})
+io.on("connection", (socket) => {
+  console.log("A user connected", socket.id);
 
+  const userId = socket.handshake.query.userId;
+  if (userId != "undefined") userSocketMap[userId] = socket.id;
 
-export {app,io,server}
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected", socket.id);
+    delete userSocketMap[userId]
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+  });
+});
+
+export { app, io, server };
