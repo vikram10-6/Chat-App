@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    original: ["http://localhost:3000"],
+    original: ["https://chat-app-gcup.onrender.com/"],
     methods: ["GET", "POST"],
   },
 });
